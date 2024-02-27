@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HBaseApp {
+
     Connection connection = null;
     Table table = null;
     Admin admin = null;
@@ -47,12 +48,13 @@ public class HBaseApp {
 
     @Test
     /*Create Table*/
-    public void createTable() throws Exception{
+    public void createTable() throws Exception {
         TableName table = TableName.valueOf(tableName);
-        if(admin.tableExists(table)) {
+        if (admin.tableExists(table)) {
             System.out.println(tableName + " already exists");
         } else {
-            TableDescriptorBuilder tableDescriptorBuilder = TableDescriptorBuilder.newBuilder(table);
+            TableDescriptorBuilder tableDescriptorBuilder = TableDescriptorBuilder.newBuilder(
+                table);
             tableDescriptorBuilder.setColumnFamily(ColumnFamilyDescriptorBuilder.of("info"));
             tableDescriptorBuilder.setColumnFamily(ColumnFamilyDescriptorBuilder.of("address"));
 
@@ -92,7 +94,8 @@ public class HBaseApp {
         put1.addColumn(Bytes.toBytes("info"), Bytes.toBytes("birthday"), Bytes.toBytes("xxxx"));
         put1.addColumn(Bytes.toBytes("info"), Bytes.toBytes("company"), Bytes.toBytes("apple"));
         put1.addColumn(Bytes.toBytes("address"), Bytes.toBytes("country"), Bytes.toBytes("CN"));
-        put1.addColumn(Bytes.toBytes("address"), Bytes.toBytes("province"), Bytes.toBytes("SHANGHAI"));
+        put1.addColumn(Bytes.toBytes("address"), Bytes.toBytes("province"),
+            Bytes.toBytes("SHANGHAI"));
         put1.addColumn(Bytes.toBytes("address"), Bytes.toBytes("city"), Bytes.toBytes("SHANGHAI"));
 
         Put put2 = new Put(Bytes.toBytes("xx"));
@@ -100,7 +103,8 @@ public class HBaseApp {
         put2.addColumn(Bytes.toBytes("info"), Bytes.toBytes("birthday"), Bytes.toBytes("xxxx"));
         put2.addColumn(Bytes.toBytes("info"), Bytes.toBytes("company"), Bytes.toBytes("PDD"));
         put2.addColumn(Bytes.toBytes("address"), Bytes.toBytes("country"), Bytes.toBytes("CN"));
-        put2.addColumn(Bytes.toBytes("address"), Bytes.toBytes("province"), Bytes.toBytes("SHANGHAI"));
+        put2.addColumn(Bytes.toBytes("address"), Bytes.toBytes("province"),
+            Bytes.toBytes("SHANGHAI"));
         put2.addColumn(Bytes.toBytes("address"), Bytes.toBytes("city"), Bytes.toBytes("SHANGHAI"));
 
         puts.add(put1);
@@ -136,7 +140,7 @@ public class HBaseApp {
         //Scan scan = new Scan(new Get(Bytes.toBytes("jepson")));
         ResultScanner rs = table.getScanner(scan);
 
-        for(Result result : rs) {
+        for (Result result : rs) {
             printResult(result);
         }
     }
@@ -145,7 +149,8 @@ public class HBaseApp {
     public void testFilter() throws Exception {
         table = connection.getTable(TableName.valueOf(tableName));
         Scan scan = new Scan();
-        FilterList filters = new FilterList(FilterList.Operator.MUST_PASS_ONE);;
+        FilterList filters = new FilterList(FilterList.Operator.MUST_PASS_ONE);
+        ;
         Filter filter1 = new PrefixFilter(Bytes.toBytes("p"));
         Filter filter2 = new PrefixFilter(Bytes.toBytes("j"));
 
@@ -157,24 +162,25 @@ public class HBaseApp {
         scan.setFilter(filters);
 
         ResultScanner rs = table.getScanner(scan);
-        for(Result result : rs) {
+        for (Result result : rs) {
             printResult(result);
             System.out.println("-----------");
         }
     }
+
     private void printResult(Result result) {
         for (Cell cell : result.rawCells()) {
             System.out.println(Bytes.toString(result.getRow()) + "\t "
-                    + Bytes.toString(CellUtil.cloneFamily(cell)) + "\t"
-                    + Bytes.toString(CellUtil.cloneQualifier(cell)) + "\t"
-                    + Bytes.toString(CellUtil.cloneValue(cell)) + "\t"
-                    + cell.getTimestamp());
+                + Bytes.toString(CellUtil.cloneFamily(cell)) + "\t"
+                + Bytes.toString(CellUtil.cloneQualifier(cell)) + "\t"
+                + Bytes.toString(CellUtil.cloneValue(cell)) + "\t"
+                + cell.getTimestamp());
         }
     }
 
     @After
     public void tearDown() {
-        try{
+        try {
             connection.close();
         } catch (IOException e) {
             e.printStackTrace();

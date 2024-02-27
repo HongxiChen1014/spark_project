@@ -10,9 +10,11 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 public class RedisApp {
+
     private Jedis jedis;
     private String host = "localhost";
     private int port = 6379;
+
     @Before
     public void setUp() {
         jedis = new Jedis(host, port);
@@ -23,6 +25,7 @@ public class RedisApp {
         jedis.set("info", "this is pk course...");
         Assert.assertEquals("this is pk course...", jedis.get("info"));
     }
+
     @Test
     public void test02() {
         GenericObjectPoolConfig config = new JedisPoolConfig();
