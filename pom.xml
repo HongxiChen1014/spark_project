@@ -99,6 +99,27 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- Hadoop Dependency-->
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-client</artifactId>
+      <version>${hadoop.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-common</artifactId>
+      <version>${hadoop.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-hdfs</artifactId>
+      <version>${hadoop.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-mapreduce-client-core</artifactId>
+      <version>${hadoop.version}</version>
+    </dependency>
 
     <!-- HBase Dependencies-->
     <dependency>
@@ -115,8 +136,14 @@
 
     <dependency>
       <groupId>org.apache.hbase</groupId>
-      <artifactId>hbase-server</artifactId>
+      <artifactId>hbase-common</artifactId>
       <version>${hbase.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-server</artifactId>
+      <version>1.3.0</version>
     </dependency>
 
     <!-- UserAgent Dependency-->
