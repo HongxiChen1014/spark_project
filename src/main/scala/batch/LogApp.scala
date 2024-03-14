@@ -5,7 +5,7 @@ import java.util.{Date, Locale}
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.time.FastDateFormat
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.hbase.TableName
+import org.apache.hadoop.hbase.{HColumnDescriptor, HTableDescriptor, TableName}
 import org.apache.hadoop.hbase.client._
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.util.Bytes
@@ -28,8 +28,6 @@ object LogApp extends Logging {
 
     val input = s"hdfs://localhost:9000/access/$day/*"
     val spark = SparkSession.builder().config("spark.serializer", "org.apache.spark.serializer.KryoSerializer").appName("LogApp").master("local[2]").getOrCreate()
-
-    //val spark = SparkSession.builder().appName("LogApp").master("local[2]").getOrCreate()
     System.setProperty("icode", "7323F3C73577877C")
     var logDF = spark.read.format("com.imooc.bigdata.spark.pk").option("path", "/Users/daisychen/Desktop/github/spark_project/src/data/test-access.log")
       .load()
@@ -148,10 +146,10 @@ object LogApp extends Logging {
         admin.disableTable(tableName)
         admin.deleteTable(tableName)
       }
-      val tableDescriptorBuilder = TableDescriptorBuilder.newBuilder(TableName.valueOf(table))
-      tableDescriptorBuilder.setColumnFamily(ColumnFamilyDescriptorBuilder.of("info"))
-      val tableDescriptor = tableDescriptorBuilder.build()
-      admin.createTable(tableDescriptor)
+      val tableDesc = new HTableDescriptor(TableName.valueOf(table))
+      val columnDesc = new HColumnDescriptor("info")
+      tableDesc.addFamily(columnDesc)
+      admin.createTable(tableDesc)
 
     } catch {
       case e: Exception => e.printStackTrace()
