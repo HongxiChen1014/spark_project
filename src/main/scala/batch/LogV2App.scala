@@ -115,23 +115,23 @@ object LogV2App extends Logging {
     spark.stop()
   }
 
-  def flushTable(table:String, conf:Configuration): Unit = {
+  def flushTable(table: String, conf: Configuration): Unit = {
 
-    var connection:Connection = null
-    var admin:Admin = null
+    var connection: Connection = null
+    var admin: Admin = null
     try {
       connection = ConnectionFactory.createConnection(conf)
       admin = connection.getAdmin
 
       admin.flush(TableName.valueOf(table)) // MemStore==>StoreFile
     } catch {
-      case e:Exception => e.printStackTrace()
+      case e: Exception => e.printStackTrace()
     } finally {
-      if(null != admin) {
+      if (null != admin) {
         admin.close()
       }
 
-      if(null != connection) {
+      if (null != connection) {
         connection.close()
       }
     }

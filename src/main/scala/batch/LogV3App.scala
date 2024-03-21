@@ -108,11 +108,11 @@ object LogV3App extends Logging {
     val tableName = createTable(day, conf)
 
     conf.set(TableOutputFormat.OUTPUT_TABLE, tableName)
-    conf.set("fs.defaultFS","hdfs://localhost:9000")
+    conf.set("fs.defaultFS", "hdfs://localhost:9000")
     // Save data
     val job = NewAPIHadoopJob.getInstance(conf)
     val table = new HTable(conf, tableName)
-    HFileOutputFormat2.configureIncrementalLoad(job,table.getTableDescriptor,table.getRegionLocator)
+    HFileOutputFormat2.configureIncrementalLoad(job, table.getTableDescriptor, table.getRegionLocator)
 
 
     val output = "hdfs://localhost:9000/etl/access/hbase"
@@ -125,7 +125,7 @@ object LogV3App extends Logging {
       job.getConfiguration
     )
 
-    if(FileSystem.get(conf).exists(outputPath)) {
+    if (FileSystem.get(conf).exists(outputPath)) {
       val load = new LoadIncrementalHFiles(job.getConfiguration)
       load.doBulkLoad(outputPath, table)
 
