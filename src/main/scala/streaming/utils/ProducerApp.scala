@@ -31,7 +31,7 @@ object ProducerApp {
       val fee = random.nextInt(400) + ""
       val result = Array("0", "1") // 0: Unsuccessful payment, 1: Successful payment
       val flag = result(random.nextInt(2))
-      var orderid = UUID.randomUUID().toString
+      val orderid = UUID.randomUUID().toString
 
       val map = new util.HashMap[String, Object]()
       map.put("time", time)
@@ -43,7 +43,7 @@ object ProducerApp {
 
       val json = new JSONObject(map)
 
-      val futureResult = producer.send(new ProducerRecord[String, String](topic(0), i + "", json + ""))
+      val futureResult = producer.send(new ProducerRecord[String, String](topic(0), json + ""))
       try {
         val metadata = futureResult.get
         println("Message sent successfully:")
